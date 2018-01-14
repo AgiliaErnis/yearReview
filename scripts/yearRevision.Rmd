@@ -1,0 +1,57 @@
+---
+title: "Rok v číslech"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+Sbírám si denně statistiky o tom, kolik času mi jaká činnost zabere. Nejsou příliš detailní, aby to samo nezabralo moc času, nejsou nutně ani konkrétní a mohou se pod to schovat mnohé věci (např. pod Friends se může schovat jak hraní her, povídání v hospodě nebo společné kino), ale obecně poskytují nějaký vhled do mého života. Díky některým sociálním sítím mám také další data a tedy jsem si řekl, že jako cvičení s R studiem (takovým matematickým nástrojem), bych si mohl statistiky zpracovat za celý rok a ukázat vám trochu co jsem tak dělal. 
+
+Přemýšlel jsem jak to prezentovat a rozhodl jsem se pro plně viditelný kód. Berte to jako náhled do toho s čím přibližně přes den v pracech dělám, ač *R* moc často nepoužívám a proto jsem si ho také chtěl touto prací trochu připomenout. Komu z kódu půjde hlava kolem, tak ho může z vesela přeskakovat a číst jen komentáře pod 
+
+Co ještě udělat:
+
+  * CSFD
+    * Data
+  * TimeLog
+    * ~~Export dat~~
+  * GoodReads
+  * Pocket
+    * Export dat
+    
+
+```{r}
+
+```
+
+```{r}
+readfile <- "report_summary.csv"
+summarydata <- read.csv(readfile, sep=",", header=FALSE)
+names(summarydata) <- c("activity", "time", "percent")
+
+test <- as.numeric(gsub(",",".",summarydata$percent))
+
+alldata <- summarydata[-nrow(summarydata),]
+
+alldata$percent <- as.numeric(gsub(",",".",alldata$percent))
+
+topdata <- subset(alldata,  alldata$activity=="Hygiene"|
+                    alldata$activity=="Sleep"|
+                    alldata$activity=="Transport" |        
+                    alldata$activity=="Study"|
+                    alldata$activity=="GTD" |
+                    alldata$activity=="Necessities" |
+                    alldata$activity=="Finance" |
+                    alldata$activity=="Work" |
+                    alldata$activity=="Fun" |
+                    alldata$activity=="Sport" |
+                    (alldata$activity=="Friends" &alldata$percent > 10)|
+                    alldata$activity=="Food")
+
+## VISUALISE
+sortedtopdata <- topdata[with(topdata, order(as.numeric(percent))), ]
+plot(sortedtopdata[,1:2])
+```
+
+*Ctrl+Alt+I*
+ *Ctrl+Shift+K* to preview the HTML file).
